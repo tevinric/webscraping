@@ -137,6 +137,7 @@ class WebScraper:
         threads: int = 4,
         respect_robots: bool = True,
         user_agent: str = "RAGScraper/1.0",
+        verify_ssl: bool = False,  # Added parameter to control SSL verification
     ):
         """
         Initialize the web scraper.
@@ -151,6 +152,7 @@ class WebScraper:
             threads: Number of threads for parallel scraping
             respect_robots: Whether to respect robots.txt
             user_agent: User agent string to use for requests
+            verify_ssl: Whether to verify SSL certificates
         """
         self.base_url = base_url
         self.output_dir = output_dir
@@ -161,6 +163,7 @@ class WebScraper:
         self.threads = threads
         self.respect_robots = respect_robots
         self.user_agent = user_agent
+        self.verify_ssl = verify_ssl  # Store the SSL verification preference
         
         # Create output directory if it doesn't exist
         os.makedirs(output_dir, exist_ok=True)
@@ -194,6 +197,14 @@ class WebScraper:
         edge_options.add_argument("--disable-dev-shm-usage")
         edge_options.add_argument("--no-sandbox")
         
+        # Add options to ignore certificate errors
+        edge_options.add_argument("--ignore-certificate-errors")
+        edge_options.add_argument("--ignore-ssl-errors")
+        
+        # Add options to reduce USB-related errors
+        edge_options.add_argument("--disable-extensions")
+        edge_options.add_argument("--disable-web-security")
+        
         service = Service(EdgeChromiumDriverManager().install())
         self.driver = webdriver.Edge(service=service, options=edge_options)
         
@@ -201,7 +212,11 @@ class WebScraper:
         """Parse robots.txt to respect disallowed paths."""
         robots_url = urljoin(self.base_url, "/robots.txt")
         try:
-            response = requests.get(robots_url, headers={"User-Agent": self.user_agent})
+            response = requests.get(
+                robots_url, 
+                headers={"User-Agent": self.user_agent},
+                verify=self.verify_ssl  # Use the verify_ssl parameter
+            )
             if response.status_code == 200:
                 for line in response.text.split("\n"):
                     if "Disallow:" in line and not line.startswith("#"):
@@ -502,7 +517,8 @@ class WebScraper:
                 response = requests.get(
                     url, 
                     headers={"User-Agent": self.user_agent},
-                    timeout=30
+                    timeout=30,
+                    verify=self.verify_ssl  # Use the verify_ssl parameter
                 )
                 response.raise_for_status()
                 html = response.text
@@ -687,6 +703,7 @@ def main():
     parser.add_argument("--threads", "-t", type=int, default=4, help="Number of threads for parallel scraping")
     parser.add_argument("--no-robots", action="store_false", dest="respect_robots", help="Don't respect robots.txt")
     parser.add_argument("--user-agent", "-u", default="RAGScraper/1.0", help="User agent string")
+    parser.add_argument("--verify-ssl", action="store_true", help="Verify SSL certificates")
     
     args = parser.parse_args()
     
@@ -700,7 +717,8 @@ def main():
         use_selenium=args.use_selenium,
         threads=args.threads,
         respect_robots=args.respect_robots,
-        user_agent=args.user_agent
+        user_agent=args.user_agent,
+        verify_ssl=args.verify_ssl  # Pass the SSL verification preference
     )
     
     print(f"Starting to scrape {args.url}")
