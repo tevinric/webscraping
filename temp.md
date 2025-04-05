@@ -1,0 +1,8 @@
+2025-04-05 14:03:57,910 - __main__ - WARNING - Error parsing robots.txt: HTTPSConnectionPool(host='www.autogen.co.za', port=443): Max retries exceeded with url: /robots.txt (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)')))
+Starting to scrape https://www.autogen.co.za
+Scraping pages:   0%|                                                                        | 0/200 [00:00<?, ?it/s][28924:1160:0405/140358.119:ERROR:fallback_task_provider.cc(126)] Every renderer should have at least one task provided by a primary task provider. If a "Renderer" fallback task is shown, it is a bug. If you have repro steps, please file a new bug and tag it as a dependency of crbug.com/739782.
+2025-04-05 14:04:00,652 - readability.readability - INFO - ruthless removal did not work.
+Scraping pages:   0%|▎                                                               | 1/200 [00:02<08:48,  2.65s/it][28924:1160:0405/140400.843:ERROR:device_event_log_impl.cc(246)] [14:04:00.814] USB: usb_service_win.cc:445 Failed to parse device interface GUID:
+[28924:1160:0405/140400.845:ERROR:usb_descriptors.cc(146)] Failed to read length for configuration 1.
+[28924:1160:0405/140400.846:ERROR:usb_descriptors.cc(105)] Failed to read all configuration descriptors. Expected 2, got 1.
+[28924:1160:0405/140400.847:ERROR:device_event_log_impl.cc(246)] [14:04:00.847] USB: usb_device_win.cc:95 Failed to read descriptors from \\?\usb#vid_17ef&pid_a359#30137c0621#{a5dcbf10-6530-11d2-901f-00c04fb951ed}.
