@@ -15,13 +15,13 @@ import requests
 from bs4 import BeautifulSoup, Tag
 from readability import Document
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.edge.options import Options
+from selenium.webdriver.edge.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from tqdm import tqdm
-from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
 # Set up logging
 logging.basicConfig(
@@ -183,19 +183,19 @@ class WebScraper:
             self._parse_robots_txt()
 
     def _setup_selenium(self):
-        """Set up the Selenium WebDriver."""
-        chrome_options = Options()
+        """Set up the Selenium WebDriver using Microsoft Edge."""
+        edge_options = Options()
         if self.headless:
-            chrome_options.add_argument("--headless")
+            edge_options.add_argument("--headless")
         
-        chrome_options.add_argument("--disable-gpu")
-        chrome_options.add_argument("--window-size=1920,1080")
-        chrome_options.add_argument(f"user-agent={self.user_agent}")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        chrome_options.add_argument("--no-sandbox")
+        edge_options.add_argument("--disable-gpu")
+        edge_options.add_argument("--window-size=1920,1080")
+        edge_options.add_argument(f"user-agent={self.user_agent}")
+        edge_options.add_argument("--disable-dev-shm-usage")
+        edge_options.add_argument("--no-sandbox")
         
-        service = Service(ChromeDriverManager().install())
-        self.driver = webdriver.Chrome(service=service, options=chrome_options)
+        service = Service(EdgeChromiumDriverManager().install())
+        self.driver = webdriver.Edge(service=service, options=edge_options)
         
     def _parse_robots_txt(self):
         """Parse robots.txt to respect disallowed paths."""
